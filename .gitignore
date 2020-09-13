@@ -1,0 +1,8 @@
+# Ignore Node Stuff
+node_modules/
+
+# Ignore public assets
+dist/
+
+# Ignore secret config
+.env

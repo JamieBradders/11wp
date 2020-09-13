@@ -1,0 +1,11 @@
+---
+layout: _templates/_wpPage
+permalink: /{% if wpPage.node.parent %}{{ wpPage.node.parent.node.slug }}/{% endif %}{{ wpPage.node.slug }}/index.html
+tags:
+  - wpPages
+pagination:
+  alias: wpPage
+  data: wpPages
+  size: 1
+  addAllPagesToCollections: true
+---

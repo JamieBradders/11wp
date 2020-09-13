@@ -1,0 +1,33 @@
+<h1>Welcome to 11wp</h1>
+
+<h2>Pages</h2>
+
+{% if wpPages.length > 0 %}
+  <ul>
+    {% for wpPage in wpPages %}
+      <li>
+        <a href="{% if wpPage.node.parent %}{{ wpPage.node.parent.node.slug }}/{% endif %}{{ wpPage.node.slug }}">
+          {{ wpPage.node.title }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No pages found</p>
+{% endif %}
+
+<h2>Posts</h2>
+
+{% if wpPosts.length > 0 %}
+  <ul>
+    {% for wpPost in wpPosts %}
+      <li>
+        <a href="blog/{{ wpPost.node.slug }}">
+          {{ wpPost.node.title }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No posts found</p>
+{% endif %}
