@@ -5,7 +5,9 @@
 
   <div v-else-if="!loading && Object.keys(post).length > 0">
     <main>
-      <h2>{{ post.title }}</h2>
+      <h1>{{ post.title }}</h1>
+      <h2>{{ post.acfPost.leadingText }}</h2>
+
       <div v-html="post.content"></div>
     </main>
   </div>
@@ -47,13 +49,16 @@ export default {
             title
             slug
             content
+            acfPost {
+              leadingText
+            }
           }
         }
       `;
 
       const client = new GraphQLClient(endpoint, {
         headers: {
-          authorization: `Bearer ${token}`,
+          authorization: `Bearer ${process.env.MIX_WP_REFRESH_TOKEN}`,
         },
       });
 

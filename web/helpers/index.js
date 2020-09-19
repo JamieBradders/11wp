@@ -1,11 +1,10 @@
 require("dotenv").config();
 
-const { GraphQLClient, request, gql } = require("graphql-request");
+const { GraphQLClient, gql } = require("graphql-request");
 const { Headers } = require("cross-fetch");
 
 const endpoint = process.env.WPGRAPHQL_API_URL;
-const hasCredentials = process.env.WP_USERNAME && process.env.WP_PASSWORD;
-let token;
+const token = process.env.MIX_WP_REFRESH_TOKEN;
 
 // Workaround against issue with graphql request
 // https://github.com/prisma-labs/graphql-request/issues/206
@@ -16,53 +15,12 @@ async function init() {
     headers: {},
   };
 
-  if (hasCredentials) {
-    if (!token) {
-      token = await authenticateWp();
-    }
-
+  if (token) {
     options.headers.authorization = `Bearer ${token}`;
   }
 
   return new GraphQLClient(endpoint, options);
 }
-
-/**
- * Authenticate WordPress
- * Makes a call to WP and returns a JWT Token. Requires WP_*
- * environment variables
- */
-async function authenticateWp() {
-  const mutation = gql`
-    mutation LoginUser($username: String!, $password: String!) {
-      login(
-        input: {
-          clientMutationId: "uniqueId"
-          username: $username
-          password: $password
-        }
-      ) {
-        authToken
-        user {
-          id
-          name
-        }
-      }
-    }
-  `;
-
-  const res = await request(endpoint, mutation, {
-    username: process.env.WP_USERNAME,
-    password: process.env.WP_PASSWORD,
-  });
-
-  if (res.login.user.id) {
-    return res.login.authToken;
-  } else {
-    console.log("Unable to authenticate:", res);
-  }
-}
-
 /**
  * Fetch Collection
  * Retrieves a collection, based on the graphql query
